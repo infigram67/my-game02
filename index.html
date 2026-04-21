@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Глава государства</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Глава государства</h1>
+
+  <!-- МЕНЮ -->
+  <div id="menu">
+    <button id="startBtn">Начать игру</button>
+  </div>
+
+  <!-- ИГРА -->
+  <div id="game" style="display:none;">
+    <div class="stats">
+      <p>Год: <span id="year">1914</span></p>
+      <p>Экономика: <span id="economy">50</span></p>
+      <p>Армия: <span id="army">50</span></p>
+      <p>Стабильность: <span id="stability">50</span></p>
+      <p>Дипломатия: <span id="diplomacy">50</span></p>
+    </div>
+
+    <div class="event-box">
+      <p id="eventText">Выбери действие</p>
+    </div>
+
+    <div class="mode-buttons">
+      <button id="internalBtn">Внутренняя политика</button>
+      <button id="externalBtn">Внешняя политика</button>
+    </div>
+
+    <div id="choices"></div>
+
+    <button id="restartBtn">Перезапуск</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
