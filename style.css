@@ -1,0 +1,59 @@
+body {
+  background: #111;
+  color: #fff;
+  font-family: Arial;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  width: 400px;
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.stats p {
+  margin: 5px 0;
+}
+
+.event-box {
+  background: #2a2a2a;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 5px;
+  min-height: 60px;
+}
+
+button {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border: none;
+  background: #444;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #666;
+}
+
+#startBtn {
+  background: green;
+}
+
+#restartBtn {
+  background: red;
+}
+
+.mode-buttons button {
+  background: #2b5cff;
+}
