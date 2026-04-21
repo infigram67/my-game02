@@ -1,4 +1,3 @@
-// состояние игры
 let state = {
   year: 1914,
   economy: 50,
@@ -6,164 +5,144 @@ let state = {
   stability: 50,
   diplomacy: 50,
   mode: "internal",
+
+  countries: {
+    Германия: { relation: 50, status: "нейтралитет", desc: "Сильная военная держава Европы" },
+    СССР: { relation: 50, status: "нейтралитет", desc: "Государство с мощной идеологией" },
+    США: { relation: 50, status: "нейтралитет", desc: "Экономический гигант" }
+  },
+
   leaders: {
-    "Гитлер": 50,
-    "Сталин": 50,
-    "Рузвельт": 50,
-    "Черчилль": 50
+    Гитлер: { relation: 50, trait: "агрессивный лидер" },
+    Сталин: { relation: 50, trait: "жесткий стратег" },
+    Рузвельт: { relation: 50, trait: "дипломатичный реформатор" }
   }
 };
 
-// элементы
-const menu = document.getElementById("menu");
-const game = document.getElementById("game");
-
-const yearEl = document.getElementById("year");
-const economyEl = document.getElementById("economy");
-const armyEl = document.getElementById("army");
-const stabilityEl = document.getElementById("stability");
-const diplomacyEl = document.getElementById("diplomacy");
-const eventText = document.getElementById("eventText");
-const choicesDiv = document.getElementById("choices");
-
-// кнопки
-document.getElementById("startBtn").addEventListener("click", startGame);
-document.getElementById("restartBtn").addEventListener("click", () => location.reload());
-document.getElementById("internalBtn").addEventListener("click", () => setMode("internal"));
-document.getElementById("externalBtn").addEventListener("click", () => setMode("external"));
-
-// старт
 function startGame() {
-  menu.style.display = "none";
-  game.style.display = "block";
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("game").style.display = "block";
   updateUI();
   renderChoices();
 }
 
-// смена режима
+document.getElementById("startBtn").onclick = startGame;
+
 function setMode(mode) {
   state.mode = mode;
   renderChoices();
-  updateUI();
 }
 
-// обновление UI
 function updateUI() {
-  yearEl.textContent = state.year;
-  economyEl.textContent = state.economy;
-  armyEl.textContent = state.army;
-  stabilityEl.textContent = state.stability;
-  diplomacyEl.textContent = state.diplomacy;
+  document.getElementById("year").textContent = state.year;
+  document.getElementById("economy").textContent = state.economy;
+  document.getElementById("army").textContent = state.army;
+  document.getElementById("stability").textContent = state.stability;
+  document.getElementById("diplomacy").textContent = state.diplomacy;
 
-  eventText.textContent =
-    `Год ${state.year}. Режим: ${state.mode === "internal" ? "внутренняя политика" : "внешняя политика"}`;
+  document.getElementById("eventText").textContent =
+    "Выбери действие";
 }
 
-// действия
-function getInternalActions() {
-  return [
-    {
-      text: "Повысить налоги",
-      effect: () => {
-        state.economy += 10;
-        state.stability -= 10;
-      }
-    },
-    {
-      text: "Снизить налоги",
-      effect: () => {
-        state.economy -= 5;
-        state.stability += 10;
-      }
-    },
-    {
-      text: "Развивать армию",
-      effect: () => {
-        state.army += 10;
-        state.economy -= 5;
-      }
-    },
-    {
-      text: "Социальные программы",
-      effect: () => {
-        state.stability += 10;
-        state.economy -= 5;
-      }
-    }
-  ];
-}
-
-function getExternalActions() {
-  let actions = [];
-
-  for (let leader in state.leaders) {
-    actions.push({
-      text: `Улучшить отношения с ${leader}`,
-      effect: () => {
-        state.leaders[leader] += 10;
-        state.diplomacy += 5;
-      }
-    });
-
-    actions.push({
-      text: `Ухудшить отношения с ${leader}`,
-      effect: () => {
-        state.leaders[leader] -= 15;
-        state.stability -= 5;
-      }
-    });
-  }
-
-  return actions;
-}
-
-// рендер кнопок
+// генерация действий
 function renderChoices() {
-  choicesDiv.innerHTML = "";
+  let div = document.getElementById("choices");
+  div.innerHTML = "";
 
-  let actions = state.mode === "internal"
-    ? getInternalActions()
-    : getExternalActions();
+  if (state.mode === "internal") {
+    addButton("Повысить налоги", () => {
+      state.economy += 10;
+      state.stability -= 10;
+    });
 
-  actions.forEach(action => {
-    let btn = document.createElement("button");
-    btn.textContent = action.text;
-    btn.onclick = () => applyAction(action);
-    choicesDiv.appendChild(btn);
-  });
+    addButton("Поддержать население", () => {
+      state.stability += 10;
+      state.economy -= 5;
+    });
+
+  } else {
+    // страны
+    for (let c in state.countries) {
+      let country = state.countries[c];
+
+      addButton(`Инфо: ${c}`, () => {
+        showText(`${c}: ${country.desc}. Отношение: ${country.relation}, статус: ${country.status}`);
+      });
+
+      addButton(`Союз с ${c}`, () => {
+        country.status = "союз";
+        country.relation += 20;
+        state.diplomacy += 5;
+      });
+
+      addButton(`Враждовать с ${c}`, () => {
+        country.status = "война";
+        country.relation -= 30;
+        state.army += 10;
+      });
+    }
+
+    // политики
+    for (let l in state.leaders) {
+      let leader = state.leaders[l];
+
+      addButton(`Инфо: ${l}`, () => {
+        showText(`${l}: ${leader.trait}. Отношение: ${leader.relation}`);
+      });
+
+      addButton(`Улучшить отношения с ${l}`, () => {
+        leader.relation += 10;
+        showDialogue(l);
+      });
+
+      addButton(`Ухудшить отношения с ${l}`, () => {
+        leader.relation -= 15;
+        showDialogue(l);
+      });
+    }
+  }
 }
 
-// применение
-function applyAction(action) {
-  action.effect();
+// кнопка
+function addButton(text, action) {
+  let btn = document.createElement("button");
+  btn.textContent = text;
+  btn.onclick = () => {
+    action();
+    nextTurn();
+  };
+  document.getElementById("choices").appendChild(btn);
+}
 
-  limitStats();
+// диалоги
+function showDialogue(leader) {
+  let rel = state.leaders[leader].relation;
 
+  let text = "";
+
+  if (rel > 70) text = `${leader}: Мы доверяем вам.`;
+  else if (rel > 40) text = `${leader}: Сотрудничество возможно.`;
+  else text = `${leader}: Мы вам не доверяем.`;
+
+  showText(text);
+}
+
+// вывод текста
+function showText(text) {
+  document.getElementById("eventText").textContent = text;
+}
+
+// ход
+function nextTurn() {
   state.year++;
-
-  if (checkGameOver()) return;
-
+  limit();
   updateUI();
 }
 
 // ограничения
-function limitStats() {
-  ["economy", "army", "stability", "diplomacy"].forEach(stat => {
-    if (state[stat] > 100) state[stat] = 100;
-    if (state[stat] < 0) state[stat] = 0;
+function limit() {
+  ["economy", "army", "stability", "diplomacy"].forEach(s => {
+    if (state[s] > 100) state[s] = 100;
+    if (state[s] < 0) state[s] = 0;
   });
-
-  for (let leader in state.leaders) {
-    if (state.leaders[leader] > 100) state.leaders[leader] = 100;
-    if (state.leaders[leader] < 0) state.leaders[leader] = 0;
-  }
-}
-
-// проигрыш
-function checkGameOver() {
-  if (state.stability <= 0) {
-    eventText.textContent = "Государство развалилось.";
-    return true;
-  }
-  return false;
 }
