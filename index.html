@@ -10,33 +10,33 @@
 <div class="container">
   <h1>Глава государства</h1>
 
-  <!-- МЕНЮ -->
   <div id="menu">
     <button id="startBtn">Начать игру</button>
   </div>
 
-  <!-- ИГРА -->
   <div id="game" style="display:none;">
+
     <div class="stats">
-      <p>Год: <span id="year">1914</span></p>
-      <p>Экономика: <span id="economy">50</span></p>
-      <p>Армия: <span id="army">50</span></p>
-      <p>Стабильность: <span id="stability">50</span></p>
-      <p>Дипломатия: <span id="diplomacy">50</span></p>
+      <p>Год: <span id="year"></span></p>
+      <p>Экономика: <span id="economy"></span></p>
+      <p>Армия: <span id="army"></span></p>
+      <p>Стабильность: <span id="stability"></span></p>
+      <p>Дипломатия: <span id="diplomacy"></span></p>
     </div>
 
     <div class="event-box">
-      <p id="eventText">Выбери действие</p>
+      <p id="eventText"></p>
     </div>
 
     <div class="mode-buttons">
-      <button id="internalBtn">Внутренняя политика</button>
-      <button id="externalBtn">Внешняя политика</button>
+      <button onclick="setMode('internal')">Внутренняя</button>
+      <button onclick="setMode('external')">Внешняя</button>
     </div>
 
     <div id="choices"></div>
 
-    <button id="restartBtn">Перезапуск</button>
+    <button onclick="location.reload()">Перезапуск</button>
+
   </div>
 </div>
 
